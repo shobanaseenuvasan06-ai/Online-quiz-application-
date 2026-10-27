@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Planner - To-Do List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="planner">
+    <header>
+      <h1>Study Planner</h1>
+      <p id="summary">No tasks yet</p>
+    </header>
+
+    <form id="task-form">
+      <input type="text" id="task-input" placeholder="Add a task, e.g. Finish HTML assignment" maxlength="80" aria-label="New task">
+      <select id="priority" aria-label="Priority">
+        <option value="high">High</option>
+        <option value="medium" selected>Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <button type="submit">Add task</button>
+    </form>
+    <p id="error" role="alert"></p>
+
+    <nav class="filters" aria-label="Filter tasks">
+      <button class="filter active" data-filter="all">All</button>
+      <button class="filter" data-filter="pending">Pending</button>
+      <button class="filter" data-filter="done">Done</button>
+    </nav>
+
+    <ul id="task-list"></ul>
+
+    <button id="clear-done" type="button">Clear completed tasks</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
