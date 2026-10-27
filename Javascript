@@ -1,0 +1,126 @@
+// ---------- Data ----------
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let currentFilter = "all";
+
+// ---------- Element references ----------
+const form = document.getElementById("task-form");
+const input = document.getElementById("task-input");
+const priority = document.getElementById("priority");
+const errorBox = document.getElementById("error");
+const list = document.getElementById("task-list");
+const summary = document.getElementById("summary");
+const clearBtn = document.getElementById("clear-done");
+const filterButtons = document.querySelectorAll(".filter");
+
+// ---------- Save to browser storage ----------
+function save() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// ---------- Show tasks on the page ----------
+function render() {
+  list.innerHTML = "";
+
+  const visible = tasks.filter(function (task) {
+    if (currentFilter === "pending") return !task.done;
+    if (currentFilter === "done") return task.done;
+    return true;
+  });
+
+  if (visible.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty";
+    empty.textContent = "Nothing here. Add a task to get started.";
+    list.appendChild(empty);
+  }
+
+  visible.forEach(function (task) {
+    const li = document.createElement("li");
+    li.className = "task " + task.priority + (task.done ? " done" : "");
+
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.checked = task.done;
+    check.setAttribute("aria-label", "Mark task as done");
+    check.addEventListener("change", function () {
+      task.done = check.checked;
+      save();
+      render();
+    });
+
+    const text = document.createElement("span");
+    text.className = "text";
+    text.textContent = task.text; // textContent keeps user input safe
+
+    const del = document.createElement("button");
+    del.className = "delete";
+    del.textContent = "Delete";
+    del.addEventListener("click", function () {
+      tasks = tasks.filter(function (t) { return t.id !== task.id; });
+      save();
+      render();
+    });
+
+    li.append(check, text, del);
+    list.appendChild(li);
+  });
+
+  updateSummary();
+}
+
+// ---------- Task counter ----------
+function updateSummary() {
+  const total = tasks.length;
+  const done = tasks.filter(function (t) { return t.done; }).length;
+  summary.textContent = total === 0
+    ? "No tasks yet"
+    : done + " of " + total + " tasks completed";
+}
+
+// ---------- Add a task ----------
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+  const value = input.value.trim();
+
+  if (value === "") {
+    errorBox.textContent = "Enter a task before adding it.";
+    return;
+  }
+
+  errorBox.textContent = "";
+  tasks.push({
+    id: Date.now(),
+    text: value,
+    priority: priority.value,
+    done: false
+  });
+
+  input.value = "";
+  save();
+  render();
+});
+
+// ---------- Hide the error while typing ----------
+input.addEventListener("input", function () {
+  errorBox.textContent = "";
+});
+
+// ---------- Filters ----------
+filterButtons.forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    currentFilter = btn.dataset.filter;
+    filterButtons.forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    render();
+  });
+});
+
+// ---------- Clear completed ----------
+clearBtn.addEventListener("click", function () {
+  tasks = tasks.filter(function (t) { return !t.done; });
+  save();
+  render();
+});
+
+// ---------- Start ----------
+render();
