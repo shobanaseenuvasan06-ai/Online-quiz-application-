@@ -1,0 +1,91 @@
+:root {
+  --bg: #eef2f7;
+  --card: #ffffff;
+  --ink: #1d2b3a;
+  --muted: #6b7a8c;
+  --line: #d9e0e8;
+  --brand: #1f6f8b;
+  --high: #c0392b;
+  --medium: #d68910;
+  --low: #2e8b57;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 24px 12px;
+}
+
+.planner {
+  width: 100%;
+  max-width: 560px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 24px rgba(29, 43, 58, 0.1);
+}
+
+h1 { margin: 0; font-size: 1.7rem; }
+#summary { margin: 4px 0 20px; color: var(--muted); }
+
+#task-form { display: flex; gap: 8px; flex-wrap: wrap; }
+#task-input { flex: 1 1 200px; }
+
+input, select, button { font: inherit; }
+input, select {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: var(--brand);
+  color: #fff;
+}
+button:hover { filter: brightness(1.1); }
+:focus-visible { outline: 3px solid #8ec5d6; outline-offset: 2px; }
+
+#error { min-height: 1.2em; margin: 6px 0 0; color: var(--high); font-size: 0.9rem; }
+
+.filters { display: flex; gap: 8px; margin: 12px 0; }
+.filter { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.filter.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+#task-list { list-style: none; margin: 0; padding: 0; }
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--line);
+  border-left: 5px solid var(--medium);
+}
+.task.high { border-left-color: var(--high); }
+.task.low { border-left-color: var(--low); }
+
+.task input[type="checkbox"] { width: 18px; height: 18px; }
+.task .text { flex: 1; word-break: break-word; }
+.task.done .text { text-decoration: line-through; color: var(--muted); }
+
+.delete { background: transparent; color: var(--high); padding: 6px 8px; }
+
+.empty { padding: 20px 0; text-align: center; color: var(--muted); }
+
+#clear-done { margin-top: 16px; background: transparent; color: var(--muted); border: 1px solid var(--line); }
+
+@media (max-width: 480px) {
+  .planner { padding: 16px; }
+  #task-form button, #task-form select { flex: 1; }
+}
